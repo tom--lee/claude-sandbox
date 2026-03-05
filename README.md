@@ -6,6 +6,7 @@ Launches Claude Code in a rootless Podman container with the current directory m
 
 - [Podman](https://podman.io/) (rootless)
 - [tmux](https://github.com/tmux/tmux)
+- Assumes claude code installed and authenicated on the host
 
 ## Setup
 
@@ -14,7 +15,7 @@ Launches Claude Code in a rootless Podman container with the current directory m
 ./build-sandbox-container.sh
 
 # Symlink the launcher into your PATH
-ln -s ~/work/claude-sandbox/claude-sandbox ~/bin/claude-sandbox
+ln -s $(pwd)/claude-sandbox /somewhere/in/your/path/claude-sandbox
 ```
 
 ## Usage
