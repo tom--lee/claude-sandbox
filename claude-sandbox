@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+IDENTIFIER="${1:?Usage: claude-sandbox <identifier>}"
+SESSION="claude-sandbox-${IDENTIFIER}"
+IMAGE="claude-sandbox:latest"
+MOUNT_DIR="$(pwd)"
+
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+    exec tmux attach-session -t "$SESSION"
+fi
+
+tmux new-session -d -s "$SESSION" \
+    "podman run -it --rm \
+        --name claude-sandbox-${IDENTIFIER} \
+        -v '${MOUNT_DIR}:/workspace:z' \
+        -w /workspace \
+        -v '${HOME}/.claude:/root/.claude:z' \
+        -v '${HOME}/.claude.json:/root/.claude.json:z' \
+        -e ANTHROPIC_API_KEY \
+        ${IMAGE}"
+
+exec tmux attach-session -t "$SESSION"
