@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-podman build -t claude-sandbox ~/work/claude-sandbox/
+podman build -t claude-sandbox "$(dirname "$0")"
