@@ -2,6 +2,11 @@
 
 Launches Claude Code in a rootless Podman container with the current directory mounted, persisted in a named tmux session.
 
+## Dependencies
+
+- [Podman](https://podman.io/) (rootless)
+- [tmux](https://github.com/tmux/tmux)
+
 ## Setup
 
 ```sh
@@ -28,9 +33,17 @@ claude-sandbox <identifier>
 | Host | Container |
 |------|-----------|
 | `$(pwd)` | `/workspace` |
-| `~/.claude` | `/root/.claude` (auth tokens & settings) |
-| `~/.claude.json` | `/root/.claude.json` (main config file) |
+| `~/.claude` | `/home/node/.claude` (auth tokens & settings) |
+| `~/.claude.json` | `/home/node/.claude.json` (main config file) |
 | `ANTHROPIC_API_KEY` env var | passed through |
+
+## Testing
+
+```sh
+./test-sandbox.sh
+```
+
+Runs Claude Code non-interactively in the container and verifies it starts and can authenticate.
 
 ## Permissions
 
