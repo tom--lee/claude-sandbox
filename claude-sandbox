@@ -1,14 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IDENTIFIER="${1:?Usage: claude-sandbox <identifier>}"
+IDENTIFIER="${1:-}"
 SESSION="claude-sandbox-${IDENTIFIER}"
 IMAGE="claude-sandbox:latest"
 MOUNT_DIR="$(pwd)"
 
-if tmux has-session -t "$SESSION" 2>/dev/null; then
-    exec tmux attach-session -t "$SESSION"
+if [ -z "$IDENTIFIER" ]; then
+    tmux list-sessions -F "#{session_name}" 2>/dev/null \
+        | grep "^claude-sandbox-" \
+        | sed 's/^claude-sandbox-//'
+    exit 0
 fi
+
+tmux_attach() {
+    if [ -n "${TMUX:-}" ]; then
+        exec tmux switch-client -t "$1"
+    else
+        exec tmux attach-session -t "$1"
+    fi
+}
+
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+    tmux_attach "$SESSION"
+fi
+
+tmux set-option -gq extended-keys on 2>/dev/null || true
 
 tmux new-session -d -s "$SESSION" \
     "podman run -it --rm \
@@ -21,4 +38,4 @@ tmux new-session -d -s "$SESSION" \
         -e ANTHROPIC_API_KEY \
         ${IMAGE}"
 
-exec tmux attach-session -t "$SESSION"
+tmux_attach "$SESSION"

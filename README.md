@@ -25,7 +25,8 @@ claude-sandbox <identifier>
 ```
 
 - Creates tmux session `claude-sandbox-<identifier>` and attaches to it
-- If the session already exists, reattaches (safe to run after SSH reconnect)
+- If the session already exists, reattaches — safe to run after SSH reconnect or from any directory
+- Uses `switch-client` instead of `attach-session` when already inside a tmux session
 - Detach with `Ctrl-b d`
 
 ## What gets mounted
