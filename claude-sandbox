@@ -7,9 +7,13 @@ IMAGE="claude-sandbox:latest"
 MOUNT_DIR="$(pwd)"
 
 if [ -z "$IDENTIFIER" ]; then
-    tmux list-sessions -F "#{session_name}" 2>/dev/null \
+    sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null \
         | grep "^claude-sandbox-" \
-        | sed 's/^claude-sandbox-//'
+        | sed 's/^claude-sandbox-//' || true)
+    if [ -z "$sessions" ]; then
+        echo "No active sandboxes. Usage: claude-sandbox <identifier>" >&2
+    fi
+    echo "$sessions"
     exit 0
 fi
 

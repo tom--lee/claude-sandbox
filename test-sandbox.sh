@@ -5,8 +5,8 @@ IMAGE="claude-sandbox:latest"
 PASS=0
 FAIL=0
 
-pass() { echo "PASS: $1"; ((PASS++)); }
-fail() { echo "FAIL: $1"; ((FAIL++)); }
+pass() { echo "PASS: $1"; PASS=$((PASS + 1)); }
+fail() { echo "FAIL: $1"; FAIL=$((FAIL + 1)); }
 
 TMPDIR="$(mktemp -d)"
 cleanup() { rm -rf "$TMPDIR"; }
@@ -41,7 +41,7 @@ EOF
     > "$TMPDIR/tmux.log"
 }
 
-SCRIPT="$(dirname "$0")/claude-sandbox"
+SCRIPT="$(cd "$(dirname "$0")" && pwd)/claude-sandbox"
 
 # Test 2: session exists, outside tmux → should use attach-session
 echo "Test 2: reattach outside tmux uses attach-session..."
